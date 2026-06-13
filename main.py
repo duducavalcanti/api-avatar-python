@@ -1,23 +1,48 @@
-# Importa o módulo requests
-import requests
+# Instale a biblioteca no Colab ou terminal:
+# pip install googletrans==4.0.0-rc1
 
-# URL da API que será consultada
+# Importa os módulos necessários
+import requests
+from googletrans import Translator
+
+# URL da API
 url = "https://last-airbender-api.fly.dev/api/v1/characters"
 
-# Cria a requisição GET
+# Faz a requisição
 resposta = requests.get(url)
 
-# Converte a resposta para JSON
+# Converte para JSON
 dados = resposta.json()
 
-# Exibe o conteúdo da resposta
-#print(dados)
+# Cria o tradutor
+tradutor = Translator()
+
+# Função para traduzir textos
+def traduzir_texto(texto):
+
+    # Verifica se o texto existe
+    if texto:
+        traducao = tradutor.translate(texto, dest='pt')
+        return traducao.text
+
+    return "Sem informação"
 
 # Percorre os personagens
 for personagem in dados:
 
-    # Exibe algumas informações
-    print("Nome:", personagem["name"])
-    print("Aliados:", personagem["allies"])
-    print("Inimigos:", personagem["enemies"])
-    print("-" * 40)
+    # Obtém os atributos
+    nome = personagem.get("name", "Sem nome")
+    afiliacao = personagem.get("affiliation", "Sem afiliação")
+
+    # Traduz os atributos
+    nome_traduzido = traduzir_texto(nome)
+    afiliacao_traduzida = traduzir_texto(afiliacao)
+
+    # Exibe os resultados
+    print("Nome original:", nome)
+    print("Nome traduzido:", nome_traduzido)
+
+    print("Afiliação original:", afiliacao)
+    print("Afiliação traduzida:", afiliacao_traduzida)
+
+    print("-" * 50)
